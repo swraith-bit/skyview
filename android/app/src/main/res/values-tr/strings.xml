@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="tile_scotopic">Kırmızı gece modu</string>
+    <string name="iss_channel_name">ISS geçişleri</string>
+    <string name="iss_channel_description">Yaklaşan ISS geçişleri için yörünge grafikli bildirimler</string>
+    <string name="meteor_channel_name">Meteor zirveleri</string>
+    <string name="meteor_channel_description">Meteor yağmuru zirveleri için akanyıldız bildirimleri</string>
+</resources>

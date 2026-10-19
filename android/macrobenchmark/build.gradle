@@ -1,0 +1,40 @@
+apply plugin: 'com.android.test'
+
+android {
+    namespace = "com.uzay.rehberi.macrobenchmark"
+    compileSdk = rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion 28
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    targetProjectPath = ':app'
+    experimentalProperties['android.experimental.self-instrumenting'] = true
+
+    buildTypes {
+        benchmark {
+            debuggable = false
+            minifyEnabled = true
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            testProguardFiles 'benchmark-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.20"
+    implementation "androidx.test.ext:junit:$androidxJunitVersion"
+    implementation "androidx.test.uiautomator:uiautomator:2.4.0"
+    implementation "androidx.benchmark:benchmark-macro-junit4:1.4.1"
+    implementation "androidx.profileinstaller:profileinstaller:1.4.1"
+    implementation "androidx.startup:startup-runtime:1.2.0"
+    implementation "com.google.errorprone:error_prone_annotations:2.36.0"
+}

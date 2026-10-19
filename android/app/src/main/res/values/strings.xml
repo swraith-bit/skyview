@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name" translatable="false">SkyView: Moon &amp; Space Tracker</string>
+    <string name="title_activity_main" translatable="false">SkyView: Moon &amp; Space Tracker</string>
+    <string name="tile_scotopic">Red night mode</string>
+    <string name="iss_channel_name">ISS passes</string>
+    <string name="iss_channel_description">Orbit-graphic alerts for upcoming ISS passes</string>
+    <string name="meteor_channel_name">Meteor peaks</string>
+    <string name="meteor_channel_description">Shooting-star alerts for meteor shower peaks</string>
+</resources>

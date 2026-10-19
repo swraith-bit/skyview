@@ -1,0 +1,55 @@
+buildscript {
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.0'
+        classpath 'com.google.gms:google-services:4.4.4'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "4.4.1.3373"
+}
+
+apply from: "variables.gradle"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Capacitor plugins are Android library modules with only debug/release variants.
+// Mirror release for the app's isolated Macrobenchmark build type.
+subprojects { subproject ->
+    subproject.plugins.withId('com.android.library') {
+        def androidExtension = subproject.extensions.getByName('android')
+        androidExtension.buildTypes {
+            def releaseType = findByName('release')
+            def benchmarkType = maybeCreate('benchmark')
+            if (releaseType != null) {
+                benchmarkType.initWith(releaseType)
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "skyview-android"
+        property "sonar.projectName", "SkyView Android"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.gradle.skipCompile", "true"
+    }
+}

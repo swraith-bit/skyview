@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- Capacitor regenerates this Cordova compatibility resource during sync. -->
+    <issue id="UnusedResources">
+        <ignore path="app/src/main/res/xml/config.xml" />
+    </issue>
+
+    <!-- @capacitor/assets emits a complete splash matrix with intentional crops. -->
+    <issue id="IconDipSize">
+        <ignore regexp="app/src/main/res/drawable.*splash\.png" />
+    </issue>
+    <issue id="IconDuplicatesConfig">
+        <ignore regexp="app/src/main/res/drawable.*splash\.png" />
+    </issue>
+    <issue id="IconLocation">
+        <ignore path="app/src/main/res/drawable/splash.png" />
+    </issue>
+</lint>
