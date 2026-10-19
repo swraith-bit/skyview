@@ -1,0 +1,660 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "JetBrains Mono", ui-monospace, monospace;
+  /* F6.1: Tek kaynak koyu-ton seti. `--color-app-*` anahtarları Tailwind v4'te
+     otomatik olarak bg-app-* / text-app-* utility sınıflarını üretir; :root'taki
+     `--sv-*` aynaları CSS taraflı tüketiciler içindir. Değerler iki yerde
+     birebir senkron — yeni ton ekleme/inkâr etme durumunda ikisini birlikte güncelle. */
+  --color-app-bg: #010204;
+  --color-app-bg-cloudy: #010103;
+  --color-app-surface: #07101d;
+  --color-app-surface-raised: #0a1120;
+  --color-app-panel: #030612;
+  --color-app-panel-raised: #050614;
+  --color-app-nav: #0a1128;
+  --color-app-border: #243044;
+  --color-app-accent: #6366f1;
+  --color-app-info: #38bdf8;
+  --color-app-success: #34d399;
+  --color-app-warning: #fbbf24;
+  --color-app-danger: #fb7185;
+  /* F6.3: Tip ölçeği — keyfi `text-[Npx]` değerleri adlandırılmış adımlara
+     taşınır (Tailwind v4 `text-*` utility üretimi otomatiktir).
+     Varsayılan ölçek ezilmez: text-xs=12, sm=14 aynen kalır. */
+  /* TUR 2: saha okunabilirliği — 12px altı metin yok. Eski adımlar korunur
+     (yüzlerce çağrı yerini kırmamak için) ama hepsi 12px'e sabitlenir. */
+  --text-2xs: 0.75rem; /* 12px */
+  --text-3xs: 0.75rem; /* 12px */
+  --text-4xs: 0.75rem; /* 12px */
+  --text-5xs: 0.75rem; /* 12px */
+  --text-xs-plus: 0.75rem; /* 12px */
+}
+
+:root {
+  /* F6.2 anlambilim katmanı (bg = en koyu, panel = derin panel, panel-raised =
+     panel içi yükseltilmiş satır/açılır liste, nav = navigasyon barları). */
+  --sv-bg: #010204;
+  --sv-bg-cloudy: #010103;
+  --sv-surface: #07101d;
+  --sv-surface-raised: #0a1120;
+  --sv-surface-deep: #030612;
+  --sv-surface-deep-raised: #050614;
+  --sv-nav: #0a1128;
+  --sv-surface-muted: rgba(15, 23, 42, 0.42);
+  --sv-border: rgba(100, 116, 139, 0.34);
+  --sv-border-subtle: rgba(255, 255, 255, 0.07);
+  --sv-text: #f8fafc;
+  --sv-text-muted: #94a3b8;
+  --sv-accent: #6366f1;
+  --sv-info: #38bdf8;
+  --sv-success: #34d399;
+  --sv-warning: #fbbf24;
+  --sv-danger: #fb7185;
+  --sv-radius-control: 8px;
+  --sv-radius-panel: 12px;
+  --sv-motion-fast: 180ms;
+  --sv-motion-page: 220ms;
+  --sv-scrim: rgba(2, 6, 23, 0.72);
+  color-scheme: dark;
+}
+
+/* ── TUR 2 · Semantik tema profilleri ────────────────────────────────────────
+   `data-theme` tek kaynaktır. Tailwind v4 utility'leri `var(--color-app-*)`
+   üzerinden okuduğu için burada tanımlanan değerler bg-app-* sınıflarına da
+   anında yansır. Tema değişimi JS ile sınıf sökümü gerektirmez. */
+[data-theme="deep-space"] {
+  color-scheme: dark;
+}
+
+[data-theme="oled"] {
+  --color-app-bg: #000000;
+  --color-app-bg-cloudy: #000000;
+  --color-app-surface: #05070c;
+  --color-app-surface-raised: #080a10;
+  --color-app-panel: #000000;
+  --color-app-panel-raised: #050505;
+  --color-app-nav: #000000;
+  --color-app-border: #1f2937;
+  --sv-bg: #000000;
+  --sv-bg-cloudy: #000000;
+  --sv-surface: #05070c;
+  --sv-surface-raised: #080a10;
+  --sv-surface-deep: #000000;
+  --sv-surface-deep-raised: #050505;
+  --sv-nav: #000000;
+  --sv-surface-muted: rgba(255, 255, 255, 0.035);
+  color-scheme: dark;
+}
+
+[data-theme="scotopic"] {
+  --color-app-bg: #000000;
+  --color-app-bg-cloudy: #000000;
+  --color-app-surface: #0b0000;
+  --color-app-surface-raised: #120000;
+  --color-app-panel: #000000;
+  --color-app-panel-raised: #080000;
+  --color-app-nav: #000000;
+  --color-app-border: #4a0d0d;
+  --color-app-accent: #ff3333;
+  --color-app-info: #ff5555;
+  --color-app-success: #ff4444;
+  --color-app-warning: #ff8844;
+  --color-app-danger: #ff2222;
+  --sv-bg: #000000;
+  --sv-bg-cloudy: #000000;
+  --sv-surface: #0b0000;
+  --sv-surface-raised: #120000;
+  --sv-surface-deep: #000000;
+  --sv-surface-deep-raised: #080000;
+  --sv-nav: #000000;
+  --sv-surface-muted: rgba(120, 0, 0, 0.18);
+  --sv-border: rgba(255, 51, 51, 0.3);
+  --sv-border-subtle: rgba(255, 51, 51, 0.16);
+  --sv-text: #ff5a5a;
+  --sv-text-muted: #d04141;
+  --sv-accent: #ff3333;
+  --sv-info: #ff5555;
+  --sv-success: #ff4444;
+  --sv-warning: #ff8844;
+  --sv-danger: #ff2222;
+  --sv-scrim: rgba(40, 0, 0, 0.8);
+  color-scheme: dark;
+}
+
+[data-theme="daylight"] {
+  --color-app-bg: #eef2f8;
+  --color-app-bg-cloudy: #e6ebf3;
+  --color-app-surface: #ffffff;
+  --color-app-surface-raised: #f8fafc;
+  --color-app-panel: #ffffff;
+  --color-app-panel-raised: #f1f5f9;
+  --color-app-nav: #ffffff;
+  --color-app-border: #cbd5e1;
+  --sv-bg: #eef2f8;
+  --sv-bg-cloudy: #e6ebf3;
+  --sv-surface: #ffffff;
+  --sv-surface-raised: #f8fafc;
+  --sv-surface-deep: #ffffff;
+  --sv-surface-deep-raised: #f1f5f9;
+  --sv-nav: #ffffff;
+  --sv-surface-muted: rgba(15, 23, 42, 0.045);
+  --sv-border: rgba(15, 23, 42, 0.14);
+  --sv-border-subtle: rgba(15, 23, 42, 0.08);
+  --sv-text: #0f172a;
+  --sv-text-muted: #52627a;
+  --sv-accent: #4f46e5;
+  --sv-info: #0284c7;
+  --sv-success: #047857;
+  --sv-warning: #b45309;
+  --sv-danger: #be123c;
+  --sv-scrim: rgba(148, 163, 184, 0.42);
+  color-scheme: light;
+}
+
+@layer utilities {
+  .pb-safe-area {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe-area {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .h-safe-nav {
+    height: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+  }
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: var(--sv-bg);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--sv-bg);
+  color: #e2e8f0;
+  overflow-x: hidden;
+  /* F6.3 mono-sayı: canlı güncellenen telemetri (ISS koordinatları, geri
+     sayımlar, skorlar) hanede genişlik oynatmasın — digits tabular akar. */
+  font-variant-numeric: tabular-nums;
+}
+
+button,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--sv-info);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+span,
+button,
+label {
+  overflow-wrap: anywhere;
+}
+
+/* Custom subtle scrollbar styling for starry dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sv-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.skeleton-block {
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 8px;
+  background: rgba(51, 65, 85, 0.45);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.app-page-enter {
+  animation: pageEnter var(--sv-motion-page) ease-out both;
+}
+
+.sv-panel {
+  border: 1px solid var(--sv-border);
+  border-radius: var(--sv-radius-panel);
+  background: var(--sv-surface);
+}
+
+/* F6.5: Gün özeti hero yüzeyi — token aynalarından türetilmiş sky-parıltılı
+   panel. İçerik aynı .sv-panel kotlarıyla duran özel gövde; night-mode katmanı
+   aşağıdaki listede beyaz-listelidir. */
+.sv-hero {
+  border: 1px solid var(--sv-border);
+  border-radius: var(--sv-radius-panel);
+  background:
+    radial-gradient(130% 150% at 12% 0%, rgba(56, 189, 248, 0.09), transparent 55%),
+    radial-gradient(140% 160% at 88% 2%, rgba(99, 102, 241, 0.11), transparent 58%),
+    var(--sv-surface-raised);
+}
+
+/* TUR 2 · Karar hero'su: gökyüzü kararını öne çıkaran hafif yükseltilmiş yüzey. */
+.sv-decision {
+  border: 1px solid var(--sv-border);
+  border-radius: var(--sv-radius-panel);
+  /* WebView 105 fallback → color-mix destekleyen sürümlerde üzerine yazılır. */
+  background:
+    radial-gradient(120% 120% at 100% 0%, rgba(56, 189, 248, 0.14), transparent 60%),
+    radial-gradient(120% 140% at 0% 100%, rgba(99, 102, 241, 0.12), transparent 62%),
+    var(--sv-surface);
+  background:
+    radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--sv-info) 14%, transparent), transparent 60%),
+    radial-gradient(120% 140% at 0% 100%, color-mix(in srgb, var(--sv-accent) 12%, transparent), transparent 62%),
+    var(--sv-surface);
+}
+
+/* TUR 2 · Yüzen kozmik dock — kenarlardan nefes alan tek parça cam yüzey. */
+.dock-safe {
+  bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+.dock-pill {
+  background: rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.42);
+  box-shadow: 0 0 18px rgba(99, 102, 241, 0.26);
+  background: color-mix(in srgb, var(--sv-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--sv-accent) 42%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--sv-accent) 26%, transparent);
+}
+
+.dock-core {
+  background: linear-gradient(160deg, #818cf8 0%, #4f46e5 52%, #38bdf8 100%);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+}
+
+/* TUR 2 · Gece şeridi zaman kadranı */
+.sv-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  touch-action: pan-y;
+}
+
+.sv-range::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 9999px;
+  background:
+    linear-gradient(90deg, rgba(56, 189, 248, 0.55), rgba(99, 102, 241, 0.75) 55%, rgba(251, 191, 36, 0.7));
+}
+
+.sv-range::-moz-range-track {
+  height: 10px;
+  border-radius: 9999px;
+  background:
+    linear-gradient(90deg, rgba(56, 189, 248, 0.55), rgba(99, 102, 241, 0.75) 55%, rgba(251, 191, 36, 0.7));
+}
+
+.sv-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -7px;
+  height: 24px;
+  width: 24px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 3px solid var(--sv-accent);
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--sv-accent) 55%, transparent);
+}
+
+.sv-range::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 3px solid var(--sv-accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--sv-accent) 55%, transparent);
+}
+
+.sv-panel-muted {
+  border: 1px solid var(--sv-border-subtle);
+  border-radius: var(--sv-radius-panel);
+  background: var(--sv-surface-muted);
+}
+
+.sv-icon-button {
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid var(--sv-border);
+  border-radius: var(--sv-radius-control);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--sv-motion-fast), background-color var(--sv-motion-fast), border-color var(--sv-motion-fast);
+}
+
+/* F5.4: Standart Modal giriş/çıkış animasyonları. Modal bileşenindeki çıkış
+   unmount timer'ı bu sürelerle aynı değerleri kullanır (motion paketini
+   ilk-yükleme zincirine çekmeden tam oynayan çıkış animasyonu). */
+@keyframes svModalIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes svModalOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes svModalPanelIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes svModalPanelOut {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(6px) scale(0.96); }
+}
+
+@keyframes svModalSheetIn {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+@keyframes svModalSheetOut {
+  from { transform: none; }
+  to { transform: translateY(100%); }
+}
+
+.sv-modal-in {
+  animation: svModalIn 160ms ease-out both;
+}
+
+.sv-modal-out {
+  animation: svModalOut 160ms ease-in both;
+}
+
+.sv-modal-panel-in {
+  animation: svModalPanelIn 180ms ease-out both;
+}
+
+.sv-modal-panel-out {
+  animation: svModalPanelOut 180ms ease-in both;
+}
+
+.sv-modal-sheet-in {
+  animation: svModalSheetIn 240ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.sv-modal-sheet-out {
+  animation: svModalSheetOut 240ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* F6.2: Standart Toast giriş/çıkış. Çıkış 180ms — Toast.tsx'teki EXIT_TOAST_MS
+   ile senkron; prefers-reduced-motion'da genel kural süreyi zaten kısar. */
+@keyframes svToastIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes svToastOut {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+.sv-toast-in {
+  animation: svToastIn 200ms ease-out both;
+}
+
+.sv-toast-out {
+  animation: svToastOut 180ms ease-in both;
+}
+
+.text-slate-500 {
+  color: #94a3b8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  input:not([type="checkbox"]):not([type="range"]):not([type="radio"]),
+  select {
+    min-height: 48px;
+  }
+}
+
+/* True OLED Scotopic Red Night Mode Overrides */
+.night-mode-active,
+.night-mode-active body,
+.night-mode-active #root,
+.night-mode-active main {
+  background-color: #000000 !important;
+  color: #ff2222 !important;
+}
+
+/* Force specific common dark elements and text to red/dark-red */
+.night-mode-active h1,
+.night-mode-active h2,
+.night-mode-active h3,
+.night-mode-active h4,
+.night-mode-active h5,
+.night-mode-active h6,
+.night-mode-active span,
+.night-mode-active p,
+.night-mode-active button,
+.night-mode-active input,
+.night-mode-active text,
+.night-mode-active label {
+  color: #ff3333 !important;
+}
+
+/* Base navigation, headers, forms, inputs, panels, and button borders and backgrounds
+   F6.1: dağınık ad-hoc koyu sınıflar token utility'lerine taşındı; night-mode
+   listesi artık [class*="bg-app-"] önekiyle tüm bg-app-* varyantlarını yakalar. */
+.night-mode-active nav,
+.night-mode-active main,
+.night-mode-active form,
+.night-mode-active input,
+.night-mode-active button,
+.night-mode-active .sv-panel,
+.night-mode-active .sv-panel-muted,
+.night-mode-active .sv-hero,
+.night-mode-active .bg-slate-900,
+.night-mode-active .bg-slate-900\/40,
+.night-mode-active .bg-slate-950,
+.night-mode-active [class*="bg-app-"] {
+  background-color: #000000 !important;
+  background-image: none !important;
+  border-color: #550000 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Ensure the red multiply overlay blocks blue/green wavelengths */
+.night-mode-active .night-mode-overlay {
+  background-color: rgba(220, 0, 0, 0.82) !important;
+}
+
+/* F2.2: while the AR view is open the scene already renders its own GPU night
+   vision, so soften the app-wide multiply overlay to avoid double-tinting, and
+   keep the live camera feed unfiltered (it must not become a red wash before
+   the overlay; the F1.4 capture flow also composites this unfiltered layer). */
+.night-mode-active.skyview-ar-open .night-mode-overlay {
+  opacity: 0.4;
+}
+
+.night-mode-active.skyview-ar-open video {
+  filter: none;
+}
+
+/* Filter raster imagery, videos, and map tiles into deep scotopic red */
+.night-mode-active img,
+.night-mode-active video,
+.night-mode-active .leaflet-tile-pane {
+  filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(550%) brightness(0.75);
+}
+
+.night-mode-active input::placeholder {
+  color: #880000 !important;
+}
+
+/* Active navigation indicators */
+.night-mode-active .bg-indigo-600,
+.night-mode-active .bg-indigo-600\/20,
+.night-mode-active .bg-indigo-600\/10 {
+  background-color: #3a0000 !important;
+  color: #ff2222 !important;
+  border: 1px solid #ff2222 !important;
+}
+
+.night-mode-active svg.lucide {
+  stroke: #ff3333 !important;
+}
+
+.night-mode-active .text-indigo-450,
+.night-mode-active .text-indigo-400,
+.night-mode-active .text-sky-400,
+.night-mode-active .text-sky-300,
+.night-mode-active .text-emerald-400,
+.night-mode-active .text-amber-400,
+.night-mode-active .text-yellow-500,
+.night-mode-active .text-indigo-300 {
+  color: #ff3333 !important;
+}
+
+.night-mode-active .border-indigo-500\/10,
+.night-mode-active .border-indigo-500\/20,
+.night-mode-active .border-slate-800,
+.night-mode-active .border-slate-800\/80,
+.night-mode-active .border-slate-800\/60,
+.night-mode-active .border-slate-700\/60,
+.night-mode-active .border-indigo-900\/40 {
+  border-color: #550000 !important;
+}
+
+/* ── TUR 2 · Daylight uyum katmanı ──────────────────────────────────────────
+   Yeni bileşenler token tüketir; eski ekranlardaki sabit slate sınıfları
+   aydınlık temada okunur kalsın diye ölçülü bir eşleme yapılır. Bu blok
+   kaldırıldığında geriye yalnız token tabanlı ekranlar kalır. */
+[data-theme="daylight"] body {
+  color: #0f172a;
+}
+
+[data-theme="daylight"] .text-white,
+[data-theme="daylight"] .text-slate-50 {
+  color: #0f172a;
+}
+
+[data-theme="daylight"] .text-slate-100,
+[data-theme="daylight"] .text-slate-200 {
+  color: #1e293b;
+}
+
+[data-theme="daylight"] .text-slate-300 {
+  color: #334155;
+}
+
+[data-theme="daylight"] .text-slate-400 {
+  color: #475569;
+}
+
+[data-theme="daylight"] .text-slate-500 {
+  color: #5b6a80;
+}
+
+[data-theme="daylight"] [class*="bg-slate-9"],
+[data-theme="daylight"] [class*="bg-slate-8"] {
+  background-color: #ffffff;
+}
+
+[data-theme="daylight"] [class*="border-white/"] {
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="daylight"] .sv-icon-button {
+  color: #0f172a;
+}
+
+[data-theme="daylight"] nav {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+[data-theme="daylight"] .sv-hero {
+  background:
+    radial-gradient(130% 150% at 12% 0%, rgba(2, 132, 199, 0.12), transparent 55%),
+    radial-gradient(140% 160% at 88% 2%, rgba(79, 70, 229, 0.1), transparent 58%),
+    var(--sv-surface-raised);
+}
+
+/* Calibration figure-8 infinity loop dash animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+
+.animate-dash {
+  stroke-dasharray: 40 120;
+  animation: dash 4s linear infinite;
+}
