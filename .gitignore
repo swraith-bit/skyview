@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production & intermediate build output
+dist/
+build/
+out/
+temp/
+
+# Android build outputs & local files
+.gradle/
+android/.gradle/
+android/build/
+android/app/build/
+android/macrobenchmark/build/
+android/captures/
+android/.cxx/
+android/.externalNativeBuild/
+android/local.properties
+local.properties
+*.apk
+*.aab
+
+# Keystores & sensitive credentials
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+.env*
+!.env.example
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing & coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tool caches & scratch
+.freebuff/
+.eslintcache
