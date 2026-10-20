@@ -13,6 +13,7 @@ const toDate = (timestamp: number | string): Date => (
 // F3.6: formatters are cached per timezone — calculateAstroPhotoWindow used to
 // build a fresh Intl.DateTimeFormat for every hourly sample.
 const hourFormatterCache = new Map<string, Intl.DateTimeFormat>();
+const timeFormatterCache = new Map<string, Intl.DateTimeFormat>();
 
 const getHourFormatter = (timezone: string): Intl.DateTimeFormat => {
   const cached = hourFormatterCache.get(timezone);
@@ -26,13 +27,23 @@ const getHourFormatter = (timezone: string): Intl.DateTimeFormat => {
   return formatter;
 };
 
-export const formatGuideTime = (date: Date | null | undefined, timezone?: string): string => {
-  if (!date || Number.isNaN(date.getTime())) return '--:--';
-  return date.toLocaleTimeString([], {
+const getTimeFormatter = (timezone: string): Intl.DateTimeFormat => {
+  const cached = timeFormatterCache.get(timezone);
+  if (cached) return cached;
+  const formatter = new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hourCycle: 'h23',
+    timeZone: timezone,
   });
+  timeFormatterCache.set(timezone, formatter);
+  return formatter;
+};
+
+export const formatGuideTime = (date: Date | null | undefined, timezone?: string): string => {
+  if (!date || Number.isNaN(date.getTime())) return '--:--';
+  const resolvedTimezone = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return getTimeFormatter(resolvedTimezone).format(date);
 };
 
 export const calculateAstroPhotoWindow = (
